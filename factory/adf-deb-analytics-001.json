@@ -1,0 +1,15 @@
+{
+	"name": "adf-deb-analytics-001",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "canadacentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ca9ec949-80e9-46ba-a176-103c13558413",
+		"tenantId": "4345e619-169f-4f91-bf92-4bcc9f839d6b"
+	}
+}
