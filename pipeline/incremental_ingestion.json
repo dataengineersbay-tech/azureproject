@@ -5,7 +5,20 @@
 			{
 				"name": "AzsqlBD To ADLSGen",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "last_cdc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "current",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -18,11 +31,20 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * FROM @{pipeline().parameters.schema}.@{pipeline().parameters.table} WHERE @{pipeline().parameters.cdc}",
+							"value": "SELECT * FROM @{pipeline().parameters.schema}.@{pipeline().parameters.table} WHERE @{pipeline().parameters.cdc} > @{activity('last_cdc').output.value[0].cdc}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
 					},
 					"enableStaging": false
 				},
@@ -30,6 +52,20 @@
 					{
 						"referenceName": "ds_azSqlDB",
 						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_Json_Dynamic",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "bronze",
+							"folder": "User",
+							"file": {
+								"value": "@concat(pipeline().parameters.table,'-',variables('current'))",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -68,6 +104,23 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "current",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current",
+					"value": {
+						"value": "@utcNow()",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -79,6 +132,11 @@
 			},
 			"cdc": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"current": {
+				"type": "String"
 			}
 		},
 		"annotations": []
