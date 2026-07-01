@@ -316,6 +316,36 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "SendEmail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ForEachSQLTable",
+						"dependencyConditions": [
+							"Failed",
+							"Skipped",
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-28.canadacentral.logic.azure.com:443/workflows/8dd18789e579426bb070ab522c055930/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=5iyjQnoHzhc8e9Ff_OUg0gdEf6bhbz3L8H3rEUztGAg",
+					"body": {
+						"value": "{\n    \"pipeline ID\":\"@{pipeline().RunId}\",\n    \"pipeline Name\":\"@{pipeline().Pipeline}\"\n}",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
