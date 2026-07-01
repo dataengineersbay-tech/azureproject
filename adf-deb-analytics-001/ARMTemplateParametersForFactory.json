@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-deb-analytics-001"
+		},
+		"ADLSGen2_LS_accountKey": {
+			"value": ""
+		},
+		"AzureSql_LS_password": {
+			"value": ""
+		},
+		"ADLSGen2_LS_properties_typeProperties_url": {
+			"value": "https://sadlshealth001.dfs.core.windows.net/"
+		},
+		"AzureSql_LS_properties_typeProperties_server": {
+			"value": "debazureprojectserver.database.windows.net"
+		},
+		"AzureSql_LS_properties_typeProperties_database": {
+			"value": "debazuredeb"
+		},
+		"AzureSql_LS_properties_typeProperties_userName": {
+			"value": "dikshit"
+		}
+	}
+}
